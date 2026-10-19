@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FixIt | Officer Dashboard</title>
+  <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
+  <style>
+    :root {
+      --blue: #1a73f8;
+      --blue-dark: #0d4fd6;
+      --accent: #00e5c0;
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --surface2: #1c2333;
+      --text: #f0f4ff;
+      --muted: #7b8db0;
+      --border: rgba(255,255,255,0.07);
+      --green: #22c55e;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+
+    /* ─── NAVBAR ─── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      padding: 0 32px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(10,14,26,0.9); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 12px; }
+
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--blue); }
+
+    .officer-badge {
+      background: rgba(0,229,192,0.1); border: 1px solid rgba(0,229,192,0.25);
+      color: var(--accent); font-size: 0.7rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 50px; letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    .btn-logout {
+      display: flex; align-items: center; gap: 7px;
+      background: transparent; color: var(--muted); border: 1px solid var(--border);
+      padding: 7px 16px; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: rgba(239,68,68,0.4); color: #fca5a5; background: rgba(239,68,68,0.06); }
+
+    /* ─── PAGE ─── */
+    .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 40px 32px 80px; }
+
+    .page-header-row {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px; margin-bottom: 32px;
+      animation: fadeSlideUp 0.4s ease forwards;
+    }
+
+    .page-title { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; }
+    .page-subtitle { color: var(--muted); font-size: 0.875rem; margin-top: 4px; }
+
+    .task-count-badge {
+      background: rgba(0,229,192,0.08); border: 1px solid rgba(0,229,192,0.2);
+      color: var(--accent); font-size: 0.72rem; font-weight: 600;
+      padding: 4px 12px; border-radius: 50px;
+    }
+
+    /* ─── CARDS GRID ─── */
+    .complaints-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 22px;
+    }
+
+    /* ─── OFFICER COMPLAINT CARD ─── */
+    .officer-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 22px; overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      opacity: 0; animation: fadeSlideUp 0.4s ease forwards;
+    }
+
+    .officer-card:hover { transform: translateY(-5px); border-color: rgba(0,229,192,0.2); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+
+    .officer-card:nth-child(1) { animation-delay: 0.07s; }
+    .officer-card:nth-child(2) { animation-delay: 0.13s; }
+    .officer-card:nth-child(3) { animation-delay: 0.19s; }
+    .officer-card:nth-child(4) { animation-delay: 0.25s; }
+    .officer-card:nth-child(5) { animation-delay: 0.31s; }
+
+    /* card top accent */
+    .card-accent { height: 3px; background: linear-gradient(90deg, var(--accent), var(--blue)); }
+
+    /* card header */
+    .card-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    }
+
+    .card-header-left { flex: 1; }
+
+    .card-date { font-size: 0.7rem; color: var(--muted); display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
+
+    .card-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; line-height: 1.3; }
+
+    .btn-view-img {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);
+      color: var(--yellow); padding: 5px 12px; border-radius: 8px;
+      font-size: 0.72rem; font-weight: 500; text-decoration: none;
+      transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+    }
+    .btn-view-img:hover { background: rgba(245,158,11,0.18); }
+
+    /* card body */
+    .card-body { padding: 18px 22px; }
+
+    .address-row {
+      display: flex; align-items: flex-start; gap: 7px;
+      font-size: 0.82rem; color: var(--muted); margin-bottom: 16px; line-height: 1.5;
+    }
+    .address-row i { color: var(--blue); margin-top: 2px; flex-shrink: 0; }
+    .address-row a { color: var(--blue); font-size: 0.72rem; margin-left: 4px; text-decoration: none; }
+
+    /* current work status */
+    .current-status-row {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 14px; margin-bottom: 16px;
+    }
+
+    .ws-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .ws-dot-unset { background: var(--muted); }
+    .ws-dot-started { background: var(--blue); box-shadow: 0 0 6px rgba(26,115,248,0.5); }
+    .ws-dot-finished { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+
+    .ws-text { font-size: 0.82rem; color: var(--muted); }
+    .ws-text strong { color: var(--text); font-weight: 500; }
+
+    /* form fields */
+    .field-group { margin-bottom: 16px; }
+
+    .field-label {
+      font-size: 0.7rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .field-label i { color: var(--accent); }
+
+    .styled-select {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 14px; border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%237b8db0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      cursor: pointer; transition: border-color 0.2s; outline: none;
+    }
+    .styled-select:focus { border-color: rgba(0,229,192,0.4); box-shadow: 0 0 0 3px rgba(0,229,192,0.08); }
+    .styled-select option { background: var(--surface2); color: var(--text); }
+
+    /* file upload */
+    .file-upload-area {
+      border: 2px dashed var(--border); border-radius: 10px;
+      padding: 16px 14px; text-align: center; cursor: pointer;
+      transition: all 0.2s; position: relative; background: var(--surface2);
+    }
+    .file-upload-area:hover { border-color: rgba(0,229,192,0.35); background: rgba(0,229,192,0.04); }
+    .file-upload-area.has-file { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.04); }
+    .file-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+
+    .upload-icon { font-size: 1.2rem; margin-bottom: 5px; }
+    .upload-text { font-size: 0.78rem; color: var(--muted); }
+    .upload-text strong { color: var(--accent); }
+    .file-name-tag { font-size: 0.72rem; color: var(--green); margin-top: 4px; display: none; }
+
+    /* hidden fields */
+    .hidden-field { display: none; }
+
+    /* card footer */
+    .card-footer {
+      padding: 14px 22px; border-top: 1px solid var(--border);
+      display: flex; justify-content: flex-end;
+    }
+
+    .btn-commit {
+      display: flex; align-items: center; gap: 7px;
+      background: linear-gradient(135deg, var(--blue), rgba(0,229,192,0.7));
+      color: white; border: none; padding: 10px 22px;
+      border-radius: 50px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-commit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(26,115,248,0.35); opacity: 0.9; }
+
+    /* empty state */
+    .empty-state {
+      grid-column: 1 / -1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 80px 40px; text-align: center;
+    }
+    .empty-icon { font-size: 2.6rem; opacity: 0.3; margin-bottom: 14px; }
+    .empty-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .empty-sub { font-size: 0.875rem; color: var(--muted); }
+
+    /* section divider */
+    .form-divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 16px; }
+      .page-wrapper { padding: 24px 16px 60px; }
+      .complaints-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-left">
+    <a class="nav-logo" href="/">Fix<span>It</span> ↗</a>
+    <span class="officer-badge">Officer</span>
+  </div>
+  <button class="btn-logout logout_btn">
+    <i class="bi bi-box-arrow-right"></i> Logout
+  </button>
+</nav>
+
+<!-- PAGE -->
+<div class="page-wrapper">
+
+  <div class="page-header-row">
+    <div>
+      <h1 class="page-title">Assigned Complaints</h1>
+      <p class="page-subtitle">Update work status and upload progress photos for each task</p>
+    </div>
+    <span class="task-count-badge"><%= complaints.length %> assigned</span>
+  </div>
+
+  <div class="complaints-grid">
+
+    <% if (!complaints || complaints.length === 0) { %>
+    <div class="empty-state">
+      <div class="empty-icon">🎉</div>
+      <div class="empty-title">All clear!</div>
+      <p class="empty-sub">No complaints are currently assigned to you.</p>
+    </div>
+    <% } %>
+
+    <% complaints.forEach((e, idx) => {
+      const workLower = (e.workStatus || '-').toLowerCase();
+      const wsDotClass = workLower === 'finished' ? 'ws-dot-finished' : workLower === 'started' ? 'ws-dot-started' : 'ws-dot-unset';
+      const wsLabel = workLower === 'started' ? 'Work Started' : workLower === 'finished' ? 'Finished' : 'Not Started';
+    %>
+
+    <div class="officer-card">
+      <div class="card-accent"></div>
+
+      <!-- HEADER -->
+      <div class="card-header">
+        <div class="card-header-left">
+          <div class="card-date">
+            <i class="bi bi-calendar3"></i> <%= e.date %>
+          </div>
+          <div class="card-title"><%= e.title %></div>
+        </div>
+        <a class="btn-view-img" href="<%= e.imageURL %>" target="_blank">
+          <i class="bi bi-image"></i> View Photo
+        </a>
+      </div>
+
+      <!-- FORM -->
+      <form action="/officer-update-complaint" method="post" enctype="multipart/form-data">
+
+        <div class="card-body">
+
+          <!-- address -->
+          <div class="address-row">
+            <i class="bi bi-geo-alt"></i>
+            <span>
+              <%= e.address %>
+              <a href="<%= e.gMapURL %>" target="_blank">
+                <i class="bi bi-box-arrow-up-right"></i>
+              </a>
+            </span>
+          </div>
+
+          <!-- current work status -->
+          <div class="current-status-row">
+            <div class="ws-dot <%= wsDotClass %>"></div>
+            <div class="ws-text">Current Status: <strong><%= wsLabel %></strong></div>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <!-- set work status -->
+          <div class="field-group">
+            <div class="field-label">
+              <i class="bi bi-tools"></i> Update Work Status
+            </div>
+            <select name="workStatus" class="styled-select" required>
+              <option value="">— Select new status —</option>
+              <option value="-">Unset</option>
+              <option value="Started">Work Started</option>
+              <option value="Finished">Work Finished</option>
+            </select>
+          </div>
+
+          <!-- upload image -->
+          <div class="field-group">
+            <div class="field-label">
+              <i class="bi bi-cloud-upload"></i> Upload Progress Photo
+            </div>
+            <div class="file-upload-area" id="uploadArea-<%= idx %>">
+              <input
+                type="file"
+                name="workStatusImage"
+                accept="image/*"
+                required
+                onchange="handleFile(this, '<%= idx %>')"
+              />
+              <div class="upload-icon">📷</div>
+              <div class="upload-text"><strong>Click to upload</strong> progress image</div>
+              <div class="file-name-tag" id="fname-<%= idx %>"></div>
+            </div>
+          </div>
+
+          <!-- hidden fields -->
+          <input type="hidden" name="complaintId" value="<%= e.id %>" />
+          <input type="hidden" name="officerName" value="<%= e.officerAppointed %>" />
+        </div>
+
+        <div class="card-footer">
+          <button type="submit" class="btn-commit">
+            <i class="bi bi-check-lg"></i> Commit Update
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <% }) %>
+  </div>
+</div>
+
+<script>
+  document.querySelector('.logout_btn').addEventListener('click', () => {
+    window.location.replace('/sub-pages/login.html');
+  });
+
+  function handleFile(input, idx) {
+    if (input.files && input.files[0]) {
+      const area = document.getElementById('uploadArea-' + idx);
+      const fname = document.getElementById('fname-' + idx);
+      area.classList.add('has-file');
+      fname.textContent = '✓ ' + input.files[0].name;
+      fname.style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>

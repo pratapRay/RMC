@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FixIt | Appoint Officer</title>
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #f0f4f2;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+      }
+
+      .card {
+        background: #ffffff;
+        border: 1px solid #d4e4dc;
+        border-radius: 16px;
+        max-width: 560px;
+        width: 100%;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(15, 110, 86, 0.08);
+      }
+
+      .card-header {
+        background: #0F6E56;
+        padding: 2rem 2rem 1.75rem;
+      }
+
+      .badge-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1.25rem;
+      }
+
+      .icon-check {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 20px;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255, 255, 255, 0.15);
+        color: #E1F5EE;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 14px;
+        border-radius: 100px;
+        letter-spacing: 0.04em;
+      }
+
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #5DCAA5;
+        flex-shrink: 0;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.5; transform: scale(0.8); }
+      }
+
+      .card-header h1 {
+        font-family: 'DM Serif Display', serif;
+        font-size: 30px;
+        font-weight: 400;
+        color: #ffffff;
+        margin-bottom: 6px;
+        line-height: 1.2;
+      }
+
+      .card-header h5 {
+        font-size: 14px;
+        font-weight: 400;
+        color: #9FE1CB;
+      }
+
+      .card-body {
+        padding: 1.75rem 2rem;
+      }
+
+      .quote-block {
+        border-left: 2px solid #5DCAA5;
+        padding-left: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .quote-block p {
+        font-size: 14px;
+        color: #5a6b65;
+        line-height: 1.7;
+        font-style: italic;
+      }
+
+      .btn-dashboard {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f4f7f5;
+        border: 1px solid #c8d9d3;
+        border-radius: 8px;
+        padding: 8px 18px;
+        font-size: 14px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        color: #1a3d31;
+        cursor: pointer;
+        transition: background 0.15s, transform 0.1s;
+        text-decoration: none;
+      }
+
+      .btn-dashboard:hover  { background: #e6efea; }
+      .btn-dashboard:active { transform: scale(0.98); }
+
+      .btn-row {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      hr.divider {
+        border: none;
+        border-top: 1px solid #e4ece8;
+        margin: 1.5rem 0 1rem;
+      }
+
+      .footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .footer-text {
+        font-size: 12px;
+        color: #8a9e97;
+      }
+
+      .footer-link {
+        font-size: 12px;
+        color: #4d7a6a;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: color 0.15s;
+      }
+
+      .footer-link:hover { color: #0F6E56; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+
+      <div class="card-header">
+        <div class="badge-row">
+          <div class="icon-check" aria-hidden="true">
+            <i class="ti ti-check"></i>
+          </div>
+          <span class="status-badge">
+            <span class="dot"></span> Success
+          </span>
+        </div>
+        <h1>Officer Appointed</h1>
+        <h5>Successfully appointed officer to the system</h5>
+      </div>
+
+      <div class="card-body">
+
+        <div class="quote-block">
+          <p>"Public work is the backbone of a community, and a good administrator is the heart that keeps it beating."</p>
+        </div>
+
+        <div class="btn-row">
+          <form action="/admin-return-dashboard" method="post">
+            <button type="submit" class="btn-dashboard">
+              <i class="ti ti-arrow-left" aria-hidden="true"></i>
+              Back to dashboard
+            </button>
+          </form>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="footer-row">
+          <span class="footer-text">© FixIt — Online Complaint Registration and Management System</span>
+          <a href="/" class="footer-link" aria-label="FixIt home">
+            <i class="ti ti-world" aria-hidden="true"></i> Home
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

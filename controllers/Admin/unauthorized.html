@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FixIt | Unauthorised</title>
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #fdf6ec;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+      }
+
+      .card {
+        background: #ffffff;
+        border: 1px solid #f0d9b0;
+        border-radius: 16px;
+        max-width: 520px;
+        width: 100%;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(186, 117, 23, 0.09);
+      }
+
+      .card-header {
+        background: #BA7517;
+        padding: 2rem 2rem 1.75rem;
+      }
+
+      .badge-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1.25rem;
+      }
+
+      .icon-warn {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255, 255, 255, 0.15);
+        color: #FAEEDA;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 14px;
+        border-radius: 100px;
+        letter-spacing: 0.04em;
+      }
+
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #FAC775;
+        flex-shrink: 0;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.5; transform: scale(0.8); }
+      }
+
+      .card-header h1 {
+        font-family: 'DM Serif Display', serif;
+        font-size: 30px;
+        font-weight: 400;
+        color: #ffffff;
+        margin-bottom: 6px;
+        line-height: 1.2;
+      }
+
+      .card-header h5 {
+        font-size: 14px;
+        font-weight: 400;
+        color: #FAC775;
+      }
+
+      .card-body {
+        padding: 1.75rem 2rem;
+      }
+
+      .info-block {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: #fdf6ec;
+        border: 1px solid #f0d9b0;
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .info-block i {
+        font-size: 20px;
+        color: #BA7517;
+        margin-top: 1px;
+        flex-shrink: 0;
+      }
+
+      .info-block p {
+        font-size: 14px;
+        color: #6b4c12;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .btn-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #BA7517;
+        border: none;
+        border-radius: 8px;
+        padding: 9px 20px;
+        font-size: 14px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        color: #ffffff;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.15s, transform 0.1s;
+      }
+
+      .btn-home:hover  { background: #854F0B; color: #fff; }
+      .btn-home:active { transform: scale(0.98); }
+
+      .btn-row {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      hr.divider {
+        border: none;
+        border-top: 1px solid #f0e0c8;
+        margin: 1.5rem 0 1rem;
+      }
+
+      .footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .footer-text { font-size: 12px; color: #b09060; }
+
+      .footer-link {
+        font-size: 12px;
+        color: #8a6020;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: color 0.15s;
+      }
+
+      .footer-link:hover { color: #BA7517; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+
+      <div class="card-header">
+        <div class="badge-row">
+          <div class="icon-warn" aria-hidden="true">
+            <i class="ti ti-alert-triangle"></i>
+          </div>
+          <span class="status-badge">
+            <span class="dot"></span> Unauthorised
+          </span>
+        </div>
+        <h1>Access Denied</h1>
+        <h5>You are not authorised to view this page</h5>
+      </div>
+
+      <div class="card-body">
+
+        <div class="info-block">
+          <i class="ti ti-lock" aria-hidden="true"></i>
+          <p>Unauthorised users are not allowed to access this site. Please log in with a valid account or contact your administrator for access.</p>
+        </div>
+
+        <div class="btn-row">
+          <a href="/" class="btn-home">
+            <i class="ti ti-home" aria-hidden="true"></i>
+            Go to home
+          </a>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="footer-row">
+          <span class="footer-text">© FixIt — Online Complaint Registration and Management System</span>
+          <a href="/" class="footer-link" aria-label="FixIt home">
+            <i class="ti ti-world" aria-hidden="true"></i> Home
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "name": "fixit-complaint-registration-and-management-system",
+  "version": "1.0.0",
+  "description": "internship project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parveshahamed00/Online-Complaint-Registration-and-Management-system.git"
+  },
+  "author": "Parvesh Ahamed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parveshahamed00/Online-Complaint-Registration-and-Management-system/issues"
+  },
+  "homepage": "https://github.com/parveshahamed00/Online-Complaint-Registration-and-Management-system#readme",
+  "dependencies": {
+    "body-parser": "^1.20.5",
+    "cloudinary": "^1.41.3",
+    "cookie-parser": "^1.4.7",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.6.1",
+    "ejs": "^3.1.10",
+    "express": "^4.22.1",
+    "express-fileupload": "^1.5.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^6.13.9",
+    "nodemailer": "^9.0.3",
+    "nodemon": "^2.0.22"
+  }
+}

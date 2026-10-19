@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FixIt | Officer Login</title>
+  <link rel="shortcut icon" href="../../images/logo.png" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
+  <style>
+    :root {
+      --accent: #00e5c0;
+      --accent-dark: #00b89b;
+      --blue: #1a73f8;
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --surface2: #1c2333;
+      --text: #f0f4ff;
+      --muted: #7b8db0;
+      --border: rgba(255,255,255,0.07);
+      --border-focus: rgba(0,229,192,0.45);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-grid {
+      position: fixed; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 55px 55px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black, transparent);
+    }
+
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(90px);
+      opacity: 0.28; pointer-events: none;
+      animation: floatOrb 9s ease-in-out infinite;
+    }
+    .orb-1 { width: 380px; height: 380px; background: rgba(0,229,192,0.3); top: -90px; left: -90px; }
+    .orb-2 { width: 260px; height: 260px; background: rgba(26,115,248,0.25); bottom: -60px; right: -60px; animation-delay: -4s; }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-22px); }
+    }
+
+    /* card */
+    .auth-card {
+      position: relative; z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 48px 44px;
+      width: 100%; max-width: 420px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      animation: popIn 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.94) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .card-top-accent {
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), #34d399);
+      border-radius: 28px 28px 0 0;
+    }
+
+    /* shield icon */
+    .icon-wrap {
+      width: 64px; height: 64px; border-radius: 20px;
+      background: rgba(0,229,192,0.08); border: 1px solid rgba(0,229,192,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; margin: 0 auto 20px;
+      animation: shieldPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+    }
+
+    @keyframes shieldPop {
+      from { opacity: 0; transform: scale(0.6); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* header */
+    .card-header { text-align: center; margin-bottom: 32px; }
+
+    .card-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem;
+      color: var(--text); text-decoration: none; display: inline-block; margin-bottom: 20px;
+    }
+    .card-logo span { color: var(--blue); }
+
+    .role-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,229,192,0.08); border: 1px solid rgba(0,229,192,0.22);
+      color: var(--accent); font-size: 0.7rem; font-weight: 600;
+      padding: 4px 12px; border-radius: 50px; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+
+    .role-chip-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .card-title {
+      font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800;
+      letter-spacing: -0.5px; margin-bottom: 6px;
+    }
+
+    .card-sub { font-size: 0.82rem; color: var(--muted); }
+
+    /* info notice */
+    .info-notice {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: rgba(0,229,192,0.05); border: 1px solid rgba(0,229,192,0.15);
+      border-radius: 12px; padding: 12px 14px; margin-bottom: 24px;
+      font-size: 0.78rem; color: var(--muted); line-height: 1.5;
+    }
+    .info-notice i { color: var(--accent); font-size: 0.9rem; margin-top: 1px; flex-shrink: 0; }
+
+    /* fields */
+    .field-group { margin-bottom: 20px; }
+
+    .field-label {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 0.75rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 8px;
+    }
+    .field-label i { color: var(--accent); }
+
+    .input-wrap { position: relative; }
+
+    .styled-input {
+      width: 100%; background: var(--surface2);
+      border: 1px solid var(--border); color: var(--text);
+      padding: 13px 16px 13px 44px;
+      border-radius: 12px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .styled-input::placeholder { color: rgba(123,141,176,0.45); }
+    .styled-input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(0,229,192,0.08); }
+
+    .input-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 1rem; pointer-events: none; transition: color 0.2s;
+    }
+    .input-wrap:focus-within .input-icon { color: var(--accent); }
+
+    .eye-btn {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      font-size: 0.95rem; padding: 0; transition: color 0.2s;
+    }
+    .eye-btn:hover { color: var(--text); }
+
+    /* ID hint */
+    .id-hint {
+      font-size: 0.7rem; color: rgba(0,229,192,0.5); margin-top: 5px;
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* submit */
+    .btn-submit {
+      width: 100%; padding: 14px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #34d399);
+      color: #0a0e1a; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 4px;
+    }
+    .btn-submit:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,229,192,0.3); }
+    .btn-submit:active { transform: translateY(0); }
+
+    .back-link {
+      display: flex; align-items: center; gap: 6px; justify-content: center;
+      margin-top: 22px; font-size: 0.78rem; color: rgba(123,141,176,0.5);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="auth-card">
+  <div class="card-top-accent"></div>
+
+  <div class="card-header">
+    <a class="card-logo" href="../../index.html">Fix<span>It</span> ↗</a>
+    <br/>
+    <div class="icon-wrap">🛡️</div>
+    <span class="role-chip"><div class="role-chip-dot"></div> Officer Portal</span>
+    <h1 class="card-title">Officer Sign In</h1>
+    <p class="card-sub">Access your assigned complaints & task board</p>
+  </div>
+
+  <div class="info-notice">
+    <i class="bi bi-info-circle"></i>
+    Use your official officer name and the ID provided to you by your administrator.
+  </div>
+
+  <form method="post" action="/officer/login">
+
+    <div class="field-group">
+      <div class="field-label"><i class="bi bi-person-badge"></i> Officer Name</div>
+      <div class="input-wrap">
+        <i class="bi bi-person-badge input-icon"></i>
+        <input class="styled-input" type="text" name="officername" id="officername"
+               placeholder="Enter your officer name" required />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label"><i class="bi bi-fingerprint"></i> Officer ID</div>
+      <div class="input-wrap">
+        <i class="bi bi-fingerprint input-icon"></i>
+        <input class="styled-input" type="password" name="password" id="password"
+               placeholder="Enter your officer ID" required style="padding-right:44px"/>
+        <button type="button" class="eye-btn" onclick="togglePwd('password', this)">
+          <i class="bi bi-eye"></i>
+        </button>
+      </div>
+      <div class="id-hint">
+        <i class="bi bi-shield-lock" style="font-size:0.7rem"></i>
+        Your ID was assigned by your administrator
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">
+      <i class="bi bi-box-arrow-in-right"></i> Sign In as Officer
+    </button>
+
+  </form>
+
+  <a class="back-link" href="../login.html">
+    <i class="bi bi-arrow-left" style="font-size:0.7rem"></i> Back to role selection
+  </a>
+</div>
+
+<script>
+  function togglePwd(id, btn) {
+    const input = document.getElementById(id);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'bi bi-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'bi bi-eye';
+    }
+  }
+</script>
+</body>
+</html>

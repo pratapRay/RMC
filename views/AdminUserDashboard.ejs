@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FixIt | User Profile — Admin View</title>
+  <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
+
+  <style>
+    :root {
+      --blue: #1a73f8;
+      --blue-dark: #0d4fd6;
+      --accent: #00e5c0;
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --surface2: #1c2333;
+      --surface3: #222d42;
+      --text: #f0f4ff;
+      --muted: #7b8db0;
+      --border: rgba(255,255,255,0.07);
+      --green: #22c55e;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+
+    /* ─── NAVBAR ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,14,26,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 32px; }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--blue); }
+
+    .admin-badge {
+      background: rgba(26,115,248,0.12);
+      border: 1px solid rgba(26,115,248,0.25);
+      color: #7bb3ff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 50px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+    .nav-links form button {
+      background: transparent;
+      border: 1px solid rgba(26,115,248,0.3);
+      color: #7bb3ff;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-links form button:hover { background: rgba(26,115,248,0.1); }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: rgba(239,68,68,0.4); color: #fca5a5; background: rgba(239,68,68,0.06); }
+
+    /* ─── PAGE WRAPPER ─── */
+    .page-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+    }
+
+    /* ─── BREADCRUMB ─── */
+    .breadcrumb-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+      animation: fadeSlideUp 0.4s ease forwards;
+    }
+    .breadcrumb-row a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb-row a:hover { color: var(--text); }
+    .breadcrumb-row .sep { opacity: 0.4; }
+    .breadcrumb-row .current { color: var(--text); }
+
+    /* ─── USER PROFILE CARD ─── */
+    .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 36px;
+      animation: fadeSlideUp 0.45s ease forwards;
+    }
+
+    .profile-card-banner {
+      height: 80px;
+      background: linear-gradient(135deg, rgba(26,115,248,0.3), rgba(0,229,192,0.15));
+      position: relative;
+    }
+
+    .profile-card-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .profile-card-body {
+      padding: 0 28px 28px;
+    }
+
+    .profile-avatar-wrap {
+      margin-top: -32px;
+      margin-bottom: 16px;
+    }
+
+    .profile-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--accent));
+      border: 3px solid var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .profile-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .profile-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(26,115,248,0.1);
+      border: 1px solid rgba(26,115,248,0.2);
+      color: #7bb3ff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .profile-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .profile-detail-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .detail-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .detail-value {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    /* ─── SECTION HEADER ─── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      animation: fadeSlideUp 0.5s ease 0.1s both;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .complaint-count-badge {
+      background: rgba(26,115,248,0.12);
+      border: 1px solid rgba(26,115,248,0.2);
+      color: #7bb3ff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      animation: fadeSlideUp 0.5s ease 0.2s both;
+    }
+
+    .empty-icon { font-size: 2.5rem; opacity: 0.3; margin-bottom: 14px; }
+    .empty-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .empty-sub { font-size: 0.875rem; color: var(--muted); }
+
+    /* ─── COMPLAINTS GRID ─── */
+    .complaints-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* ─── COMPLAINT CARD ─── */
+    .complaint-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      animation: fadeSlideUp 0.4s ease forwards;
+    }
+
+    .complaint-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(26,115,248,0.25);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+
+    /* stagger */
+    .complaint-card:nth-child(1) { animation-delay: 0.1s; }
+    .complaint-card:nth-child(2) { animation-delay: 0.17s; }
+    .complaint-card:nth-child(3) { animation-delay: 0.24s; }
+    .complaint-card:nth-child(4) { animation-delay: 0.31s; }
+    .complaint-card:nth-child(5) { animation-delay: 0.38s; }
+    .complaint-card:nth-child(6) { animation-delay: 0.45s; }
+
+    /* image */
+    .card-image-wrap {
+      position: relative;
+      height: 160px;
+      overflow: hidden;
+    }
+
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .complaint-card:hover .card-image-wrap img {
+      transform: scale(1.05);
+    }
+
+    .image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,14,26,0.85) 0%, transparent 50%);
+    }
+
+    .image-date {
+      position: absolute;
+      bottom: 10px;
+      left: 14px;
+      font-size: 0.7rem;
+      color: rgba(240,244,255,0.7);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* card body */
+    .card-body {
+      padding: 18px 20px;
+    }
+
+    .card-address {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      line-height: 1.4;
+    }
+
+    .card-address i { color: var(--blue); margin-top: 2px; flex-shrink: 0; }
+
+    .card-address a {
+      color: var(--blue);
+      font-size: 0.75rem;
+      margin-left: 4px;
+      text-decoration: none;
+    }
+
+    /* status chips row */
+    .status-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+    }
+
+    .chip-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+
+    /* approval */
+    .chip-pending { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.2); color: var(--yellow); }
+    .chip-pending .chip-dot { background: var(--yellow); box-shadow: 0 0 5px rgba(245,158,11,0.5); }
+
+    .chip-yes { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); color: var(--green); }
+    .chip-yes .chip-dot { background: var(--green); box-shadow: 0 0 5px rgba(34,197,94,0.5); }
+
+    .chip-no { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); color: var(--red); }
+    .chip-no .chip-dot { background: var(--red); box-shadow: 0 0 5px rgba(239,68,68,0.5); }
+
+    /* work status */
+    .chip-started { background: rgba(26,115,248,0.1); border-color: rgba(26,115,248,0.2); color: #7bb3ff; }
+    .chip-started .chip-dot { background: var(--blue); box-shadow: 0 0 5px rgba(26,115,248,0.5); }
+
+    .chip-finished { background: rgba(0,229,192,0.08); border-color: rgba(0,229,192,0.2); color: var(--accent); }
+    .chip-finished .chip-dot { background: var(--accent); box-shadow: 0 0 5px rgba(0,229,192,0.4); }
+
+    .chip-default { background: var(--surface2); border-color: var(--border); color: var(--muted); }
+    .chip-default .chip-dot { background: var(--muted); }
+
+    /* officer row */
+    .officer-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+
+    .officer-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(26,115,248,0.15);
+      border: 1px solid rgba(26,115,248,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #7bb3ff;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .officer-info { flex: 1; }
+    .officer-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .officer-name { font-size: 0.82rem; font-weight: 500; color: var(--text); text-decoration: none; }
+    .officer-name:hover { color: #7bb3ff; }
+
+    /* card footer */
+    .card-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-delete {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-delete:hover { border-color: rgba(239,68,68,0.4); color: var(--red); background: rgba(239,68,68,0.06); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .page-wrapper { padding: 24px 16px 60px; }
+      .complaints-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav>
+  <div class="nav-left">
+    <a class="nav-logo" href="/">Fix<span>It</span> ↗</a>
+    <span class="admin-badge">Admin</span>
+  </div>
+
+  <div class="nav-links">
+    <a href="/admin/appoint-officer">
+      <i class="bi bi-person-badge"></i> Appoint Officer
+    </a>
+    <form action="/admin-return-dashboard" method="post">
+      <button type="submit">
+        <i class="bi bi-grid"></i> Dashboard
+      </button>
+    </form>
+  </div>
+
+  <button class="btn-logout logout_btn">
+    <i class="bi bi-box-arrow-right"></i> Logout
+  </button>
+</nav>
+
+<!-- ─── PAGE CONTENT ─── -->
+<div class="page-wrapper">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-row">
+    <a href="/admin-return-dashboard"><i class="bi bi-grid" style="font-size:0.8rem"></i> Dashboard</a>
+    <span class="sep">/</span>
+    <a href="/admin/user-list">Users</a>
+    <span class="sep">/</span>
+    <span class="current">User Profile</span>
+  </div>
+
+  <!-- ─── USER PROFILE CARD ─── -->
+  <div class="profile-card">
+    <div class="profile-card-banner"></div>
+    <div class="profile-card-body">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar">
+          <%= userDetails.username ? userDetails.username.charAt(0).toUpperCase() : 'U' %>
+        </div>
+      </div>
+
+      <div class="profile-name"><%= userDetails.username %></div>
+      <div class="profile-role">
+        <i class="bi bi-person-check" style="font-size:0.75rem"></i>
+        Registered Citizen
+      </div>
+
+      <div class="profile-details-grid">
+        <div class="profile-detail-item">
+          <div class="detail-label">
+            <i class="bi bi-fingerprint"></i> User ID
+          </div>
+          <div class="detail-value"><%= userDetails.userId %></div>
+        </div>
+        <div class="profile-detail-item">
+          <div class="detail-label">
+            <i class="bi bi-person"></i> Username
+          </div>
+          <div class="detail-value"><%= userDetails.username %></div>
+        </div>
+        <div class="profile-detail-item">
+          <div class="detail-label">
+            <i class="bi bi-envelope"></i> Email Address
+          </div>
+          <div class="detail-value"><%= userDetails.email %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── COMPLAINTS SECTION ─── -->
+  <div class="section-header">
+    <div class="section-title">
+      <i class="bi bi-clipboard-pulse" style="color:var(--blue)"></i>
+      Complaints Filed
+      <span class="complaint-count-badge">
+        <%= complaints.length %> total
+      </span>
+    </div>
+  </div>
+
+  <% if (complaints.length === 0) { %>
+
+  <div class="empty-state">
+    <div class="empty-icon">📭</div>
+    <div class="empty-title">No complaints registered</div>
+    <p class="empty-sub">This user hasn't filed any complaints yet.</p>
+  </div>
+
+  <% } else { %>
+
+  <div class="complaints-grid">
+    <% complaints.forEach(e => {
+      const approvalLower = (e.approvalStatus || 'Pending').toLowerCase();
+      const workLower = (e.workStatus || '-').toLowerCase();
+
+      let approvalChip = 'chip-default';
+      let approvalLabel = e.approvalStatus || '~';
+      if (approvalLower === 'yes') approvalChip = 'chip-yes';
+      else if (approvalLower === 'no') approvalChip = 'chip-no';
+      else if (approvalLower === 'pending') approvalChip = 'chip-pending';
+
+      let workChip = 'chip-default';
+      if (workLower === 'started') workChip = 'chip-started';
+      else if (workLower === 'finished') workChip = 'chip-finished';
+    %>
+
+    <div class="complaint-card">
+
+      <!-- Image -->
+      <div class="card-image-wrap">
+        <img src="<%= e.imageURL %>" alt="Complaint photo" loading="lazy"
+             onerror="this.src='https://placehold.co/400x160/111827/7b8db0?text=No+Image'"/>
+        <div class="image-overlay"></div>
+        <div class="image-date">
+          <i class="bi bi-calendar3"></i>
+          <%= e.date %>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body">
+
+        <!-- Address -->
+        <div class="card-address">
+          <i class="bi bi-geo-alt"></i>
+          <span>
+            <%= e.address %>
+            <a href="<%= e.gMapURL %>" target="_blank">
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </span>
+        </div>
+
+        <!-- Status chips -->
+        <div class="status-chips">
+          <div class="status-chip <%= approvalChip %>">
+            <div class="chip-dot"></div>
+            Approval: <%= approvalLabel %>
+          </div>
+          <div class="status-chip <%= workChip %>">
+            <div class="chip-dot"></div>
+            <%= workLower === 'started' ? 'Work Started' : workLower === 'finished' ? 'Completed' : 'No Work Update' %>
+          </div>
+        </div>
+
+        <!-- Officer -->
+        <div class="officer-row">
+          <div class="officer-avatar">
+            <%= e.officerAppointed && e.officerAppointed !== '-' ? e.officerAppointed.charAt(0).toUpperCase() : '?' %>
+          </div>
+          <div class="officer-info">
+            <div class="officer-label">Assigned Officer</div>
+            <a class="officer-name" href="#">
+              <%= e.officerAppointed && e.officerAppointed !== '-' ? e.officerAppointed : 'Not yet assigned' %>
+            </a>
+          </div>
+          <i class="bi bi-person-badge" style="color:var(--muted); font-size:1rem"></i>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer">
+        <form action="/delete-complaint/<%= e.id %>" method="post">
+          <button type="submit" class="btn-delete" name="dashboard" value="AdminUserDashboard"
+                  onclick="return confirm('Delete this complaint? This cannot be undone.')">
+            <i class="bi bi-trash3"></i> Delete
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <% }) %>
+  </div>
+
+  <% } %>
+
+</div>
+
+<script>
+  document.querySelector('.logout_btn').addEventListener('click', () => {
+    window.location.replace('/sub-pages/login.html');
+  });
+</script>
+</body>
+</html>
